@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand-lg bg-body-light border-bottom sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href=<%= (currUser && currUser.type === "Admin" )? "/admin" : "/posts" %>><img class="img-logo"src="/IMG/vitlogo.jpg" alt="" srcset=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link" href=<%= (currUser && currUser.type === "Admin" ) ? "/admin" : "/posts" %>>Home</a>
+        </div>
+
+        <div class="navbar-nav ms-auto">
+          <% if( currUser && currUser.linkedAccounts){ %>
+            <div class="dropdown acc-switch">
+              <button type="button" class="btn btn-switch " data-bs-toggle="dropdown" aria-expanded="false">
+                <% if(currUser.username.includes("anonymous")){ %>
+                  <b><i class="fa-solid fa-user-secret"></i></b>
+                  <% } else{ %>
+                    <b><i class="fa-solid fa-user"></i></b>
+                    <% } %>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/user/switch/<%= currUser.linkedAccounts._id %>"> <%= !currUser.username.includes("anonymous")? "Switch To Anonymous" : "Switch to Private" %></a></li>
+              </ul>
+            </div>
+          <% } %>
+
+          <% if(!currUser){ %>
+            <a class="nav-link" href="/user/signup">SignUp</a>
+            <a class="nav-link" href="/user/login">Login</a>
+            <% } %>
+            <% if(currUser){ %>
+              <% if(currUser.type !== "Admin") {%>
+                <a class="nav-link" href="/posts/new">Add Post</a>
+                <% } %>
+                <% if(!currUser.username.includes("anonymous") && currUser.type !== "Admin"){ %>
+                  <a class="nav-link" href="/chats">Chats</a>
+                  <% } %>
+              <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Notice</a>
+                <ul class="dropdown-menu">
+                  <% if(currUser.type === "Faculty" || currUser.type === "Admin") {%>
+                    <li><a class="dropdown-item" href="/notices/new">Send Notice</a></li>
+                  <% } %>
+                  <li><a class="dropdown-item" href="/notices">View Notices</a></li>
+                </ul>
+              </div>
+              <% if(currUser.username.includes("anonymous") || currUser.type === "Admin" ){ %>
+                <div class="dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Other</a>
+                  <ul class="dropdown-menu">
+                    <% if(currUser.type === "Admin") {%>
+                      <li><a class="dropdown-item" href="/complaints">View Complaints</a></li>
+                    <% } else{%>
+                      <li><a class="dropdown-item" href="/complaints">View Complaints</a></li>
+                      <li><a class="dropdown-item" href="/complaints/new">Make Complaint</a></li>
+                    <% } %>
+                  </ul>
+                </div>
+                <% } %>
+              
+              <a class="nav-link" href="/user/logout">LogOut</a>                           
+              <% } %>          
+        </div>
+      </div>
+    </div>
+  </nav>

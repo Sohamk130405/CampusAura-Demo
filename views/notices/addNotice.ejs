@@ -1,0 +1,47 @@
+<% layout('/layouts/boilerplate') -%>
+  <body>
+    <div class="row  mt-3">
+      <div class="col-8">
+        <br><br>
+    <h3>Notice:</h3>
+
+    <form action="/notices?_method=PUT" method="post" class="needs-validation" novalidate>     
+      <div class="mb-3 mt-2">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" name="notice[title]" class="form-control" required/>
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description:</label>
+        <textarea name="notice[description]" placeholder="Enter description"  class="form-control" required></textarea>
+      </div>
+      <div class="mb-3 mt-2">
+        <label for="year" class="form-label">Year:</label>
+        <select name="notice[year]" class="form-control" required>
+            <option value="" disabled selected>Select Year</option>
+            <option value="All">All</option>
+            <option value="First">First</option>
+            <option value="Second">Second</option>
+            <option value="Third">Third</option>
+            <option value="Fourth">Fourth</option>
+        </select>
+        <div class="invalid-feedback">Year is required!</div>
+    </div>
+    <div class="mb-3 mt-2">
+        <label for="branch" class="form-label">Branch:</label>
+        <select name="notice[branch]" class="form-control" required>
+            <option value="" disabled selected>Select Branch</option>
+            <option value="All">All</option>
+            <option value="CSE">Computer Science and Engineering</option>
+            <option value="ECE">Electronics and Communication Engineering</option>
+            <option value="ME">Mechanical Engineering</option>
+        </select>
+        <div class="invalid-feedback">Branch is required!</div>
+    </div>
+
+      <button type="submit" class="btn btn-dark add-btn btn-lg  mt-3">Send</button>
+    </form>
+    </div>
+  </div>
+  </body>
+</html>

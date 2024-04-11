@@ -1,0 +1,56 @@
+<% layout('/layouts/boilerplate') -%>
+    <div class="row  mt-3">
+      <div class="col-8">
+        <br><br>
+    <h3>Add Details</h3>
+
+    <form action="/posts?_method=PUT" method="post" class="needs-validation" novalidate enctype="multipart/form-data">     
+      <div class="mb-3 mt-2">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" name="post[title]" class="form-control" required/>
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description:</label>
+        <textarea name="post[description]" placeholder="Enter description"  class="form-control" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input type="file" name="image" class="form-control"/>
+      </div>
+
+      <button type="submit" class="btn btn-dark add-btn btn-lg  mt-3">Post</button>
+    </form>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var form = document.querySelector('form');
+  
+      form.addEventListener('submit', function (event) {
+        var titleInput = form.querySelector('input[name="post[title]"]');
+        var descriptionInput = form.querySelector('textarea[name="post[description]"]');
+  
+        if (containsSensitiveWords(titleInput.value) || containsSensitiveWords(descriptionInput.value)) {
+          alert('Please avoid using cuss words or sensitive words.');
+          event.preventDefault(); // Prevent form submission
+        }
+      });
+  
+      function containsSensitiveWords(text) {
+        // Add your list of sensitive words or patterns here
+        var sensitiveWords = ['badword1', 'badword2', 'badword3'];
+  
+        for (var i = 0; i < sensitiveWords.length; i++) {
+          var pattern = new RegExp('\\b' + sensitiveWords[i] + '\\b', 'i'); // Case-insensitive match
+          if (pattern.test(text)) {
+            return true;
+          }
+        }
+  
+        return false;
+      }
+    });
+  </script>
+  

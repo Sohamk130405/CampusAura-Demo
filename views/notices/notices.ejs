@@ -1,0 +1,28 @@
+<% layout('/layouts/boilerplate') -%>
+
+<% if ( (currUser && currUser.status === "Verified") || currUser.type === "Admin"){ %>
+    <div class="row mt-2">
+        <h4>Notices</h4>
+    </div>
+    <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1 row-cols-1 g-6 mt-3">
+        <% if (allNotices.length > 0) { %>
+          <% allNotices.forEach(notice => { %>
+                  <% if( (( currUser.year === notice.year || notice.year === "All" ) && ( currUser.branch === notice.branch || notice.branch === "All" ) ) || currUser._id.equals(notice.author)) { %> 
+                    <div class="alert <%= currUser._id.equals(notice.author)? "alert-success" : "alert-info"  %> notice col pt-3 m-2" role="alert">
+                      <div class="card-text">
+                        <b><%= notice.title %></b>
+                      <p><%= notice.description %></p>
+                      <p>For <%= notice.branch%> Branch , <%= notice.year %> Year</p>
+                      </div>
+                      <h6 class="card-subtitle mb-2 text-body-secondary"><%= notice.createdAt.toLocaleString('en-IN'); %></h6>
+                    </div>
+                    <% } %>
+          <% }) %>
+        <% } else { %>
+          <div class="alert alert-info" role="alert">
+            Currently No Notice Available.
+          </div>
+        <% } %>
+      </div>
+    <% }%>
+

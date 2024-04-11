@@ -1,0 +1,132 @@
+<% layout('/layouts/boilerplate') -%>
+<head>
+  <link rel="stylesheet" href="/CSS/chat.css" />
+</head>
+<body>
+  <div class="row clearfix">
+    <div class="col-lg-12">
+      <div class="card chat-app">
+        <div id="plist" class="people-list">
+          <h4>Select Recipient</h4>
+          <ul class="list-unstyled chat-list mt-2 mb-0">
+            <% faculties.forEach(faculty => {%>
+            <li
+              class="clearfix"
+              onclick="location.href='/chats/<%= faculty._id %>'"
+            >
+              <div class="about">
+                <div class="name">
+                  <b><i class="fa-solid fa-user"></i></b>
+                  <%= faculty.name %>
+                </div>
+              </div>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+        <% if( currUser && receiver ) {%>
+        <div class="chat">
+          <div class="chat-header clearfix">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="chat-about recipient-name">
+                  <b><i class="fa-solid fa-user"></i></b>
+                  <span class="m-b-0"><b><%= receiver.name %></b></span
+                  ><br /><span class="m-b-0"
+                    ><b><%= receiver.branch %></b></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-history">
+            <ul class="m-b-0">
+              <% msg.sort((a, b) => a.createdAt - b.createdAt).forEach(m => { %>
+              <li class="clearfix">
+                <% if (m.from.equals(currUser._id)) { %>
+                <div class="message my-message float-right"><%= m.msg %></div>
+                <% } else { %>
+                <div class="message other-message"><%= m.msg %></div>
+                <% } %>
+              </li>
+              <% }); %>
+            </ul>
+          </div>
+
+          <div class="chat-message clearfix">
+            <form
+              action="/chats/<%= currUser._id %>/<%= receiver._id %>"
+              method="post"
+            >
+              <div class="input-group mb-0">
+                <div class="input-group-prepend mr-2">
+                  <button class="btn btn-info" type="submit">Send</button>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter message here..."
+                  name="msg"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Step 3: Function to fetch new messages from the server
+      function fetchNewMessages() {
+        // Make an AJAX request to fetch new messages
+        fetch("/chats/<%= currUser._id %>/<%= receiver._id %>/messages")
+          .then((response) => response.json())
+          .then((data) => {
+            // Update the chat interface with new messages
+            data.forEach((message) => {
+              const chatHistory = document.querySelector(".chat-history");
+              const messageElement = document.createElement("li");
+              messageElement.className = "clearfix";
+              messageElement.innerHTML = `
+                    <div class="message ${
+                      message.from === "<%= currUser._id %>"
+                        ? "my-message float-right"
+                        : "other-message"
+                    }">${message.msg}</div>
+                `;
+              chatHistory.appendChild(messageElement);
+            });
+          })
+          .catch((error) =>
+            console.error("Error fetching new messages:", error)
+          );
+      }
+
+      // Step 4: Call fetchNewMessages every 1 seconds (adjust the interval as needed)
+      setInterval(fetchNewMessages, 1000);
+
+      const recipientNames = document.querySelectorAll(".recipient-name");
+      const peopleList = document.getElementById("plist");
+      const chat = document.querySelector(".chat");
+
+      recipientNames.forEach(function (recipientName) {
+        recipientName.addEventListener("click", function () {
+          // Toggle the visibility of the people list
+          peopleList.classList.toggle("open");
+
+          // Close the chat box when the people list is opened
+          if (peopleList.classList.contains("open")) {
+            chat.style.display = "none";
+          } else {
+            chat.style.display = "block";
+          }
+        });
+      });
+
+      const lastMessageTimestamp = new Date().toISOString(); // Get timestamp of the last message displayed
+      fetchNewMessages(); // Initial fetch
+    });
+  </script>
+</body>

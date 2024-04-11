@@ -1,0 +1,76 @@
+<% layout('/layouts/boilerplate') -%>
+  <% if (currUser && currUser.status === "Verified") { %>
+    <div class="row mt-2">
+      <% if (currUser) { %>
+        <h3>Welcome <%= currUser.name %></h3>
+      <% } %>
+    </div>
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-1 g-6 mt-3">
+      <% if (allPosts.length > 0) { %>
+        <% allPosts.forEach(post => { %>
+          <div class="card col listing-card pt-3" onclick="location.href='/posts/<%= post._id%>'">
+            <% if (post.image) { %>
+              <img src="<%= post.image %>" class="card-img-top" alt="...">
+              <div class="card-body">
+                <p class="card-btns">
+                  <form class="col-lg-6 col-md-8 needs-validation" action="/posts/<%= post._id %>/like" method="post" novalidate>
+                    <input type="hidden" name="like" value="on">
+                    <% if (post.like.indexOf(currUser._id) === -1) { %>
+                      <button class="btn" type="submit">
+                        <span><%= post.like.length %></span>
+                        <i class="fa-regular fa-thumbs-up col-1"></i> <!-- User has liked the post -->
+                      </button>
+                      <span><%= post.comments.length %></span>
+                      <span><i class="fa-regular fa-comment col-1"></i></span>
+                  <% } else { %>
+                      <button class="btn" type="submit">
+                        <span><%= post.like.length %></span>
+                        <i class="fa-solid fa-thumbs-up col-1"></i> <!-- User has not liked the post -->
+                      </button>
+                      <span><%= post.comments.length %></span>
+                      <span><i class="fa-regular fa-comment col-1"></i></span>
+                  <% } %>
+                  </form>
+                </p>
+              </div>
+            <% } else { %>
+              <div class="col pt-3">
+                <div class="card-body">
+                  <h5 class="card-title"><%= post.title %></h5>
+                  <div class="card-btns">
+                    <form class="col-lg-6 col-md-8 needs-validation" action="/posts/<%= post._id %>/like" method="post" novalidate>
+                      <input type="hidden" name="like" value="on">
+                      <% if (post.like.indexOf(currUser._id) === -1) { %>
+                        <button class="btn" type="submit">
+                          <span><%= post.like.length %></span>
+                          <i class="fa-regular fa-thumbs-up col-1"></i> <!-- User has liked the post -->
+                        </button>
+                        <span><%= post.comments.length %></span>
+                        <span><i class="fa-regular fa-comment col-1"></i></span>
+                    <% } else { %>
+                        <button class="btn" type="submit">
+                          <span><%= post.like.length %></span>
+                          <i class="fa-solid fa-thumbs-up col-1"></i> <!-- User has not liked the post -->
+                        </button>
+                        <span><%= post.comments.length %></span>
+                        <span><i class="fa-regular fa-comment col-1"></i></span>
+                    <% } %>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="alert alert-info" role="alert">
+          No posts available.
+        </div>
+      <% } %>
+    </div>
+  <% } else if (currUser && currUser.status === "Not Verified") { %>
+    <div class="alert alert-info mt-2" role="alert">
+      Your verification is in process! You will receive an email once the account gets verified.
+    </div>
+  <% } %>
+

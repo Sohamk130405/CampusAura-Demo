@@ -1,0 +1,27 @@
+<% layout('/layouts/boilerplate') -%>
+
+<% if ( currUser && currUser.status === "Verified"){ %>
+    <div class="row mt-2">
+        <h4>Complaints And Suggestion</h4>
+    </div>
+    <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1 row-cols-xs-1 g-6 mt-3">
+        <% if (allComplaints.length > 0) { %>
+          <% allComplaints.forEach(complaint => { %>                  
+                    <div class="alert  <%= complaint.type === "Suggestion"? "alert-warning" : "alert-danger"  %> notice col pt-3 m-2" role="alert">
+                      <div class="card-text">
+                        <b><%= complaint.title %> </b>
+                      <p><%= complaint.description %></p>
+                      <p>By <%= complaint.author?.username %> , <%= complaint.type%> </p>
+                      </div>
+                      <h6 class="card-subtitle mb-2 text-body-secondary"><%= complaint.createdAt.toLocaleString('en-IN'); %></h6>
+                    </div>
+            
+          <% }) %>
+        <% } else { %>
+          <div class="alert alert-info" role="alert">
+            Currently No Complaints Available.
+          </div>
+        <% } %>
+      </div>
+    <% }%>
+
